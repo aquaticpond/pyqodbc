@@ -13,7 +13,6 @@ class Entity:
         self.mysql = mysql
         self.company_file = company_file or self.company_file
         self.last_entry_datetime = last_modified or self.last_entry_datetime or self.get_last_modified() or '2001-01-01 00:00:00'
-        self.sync()
 
     def append_custom_data(self, toRaw):
         return toRaw
