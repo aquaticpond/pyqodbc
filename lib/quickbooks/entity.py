@@ -1,0 +1,64 @@
+class Entity:
+
+    qodbc_table = None
+    mysql_table = None
+    field_map = ()
+    update_fields = ()
+    custom_mysql_fields = ()
+    last_entry_datetime = None
+    company_file = 0
+
+    def __init__(self, qodbc, mysql, company_file=0, last_modified=None):
+        self.qodbc = qodbc
+        self.mysql = mysql
+        self.company_file = company_file or self.company_file
+        self.last_entry_datetime = last_modified or self.last_entry_datetime or self.get_last_modified() or '2001-01-01 00:00:00'
+        self.sync()
+
+    def append_custom_data(self, toRaw):
+        return toRaw
+
+    def sync(self):
+        data = self.get_latest_data_from_quickbooks()
+        data = self.append_custom_data(data)
+        inserts = [self.build_mysql_insert(row) for row in data]
+        for row in inserts:
+            self.mysql.insert(row)
+
+    def get_last_modified(self):
+        query = "SELECT MAX(time_modified) as max_date FROM " + self.mysql_table + " WHERE company_file=" + self.company_file
+        return self.mysql.query(query)[0][0]
+
+    def get_latest_data_from_quickbooks(self):
+        query = "SELECT " + self.build_quickbooks_select_fields() + " FROM " + self.qodbc_table + " WHERE TimeModified >= {ts '" + self.last_entry_datetime +"'}"
+        return self.qodbc.query(query)
+
+    def build_quickbooks_select_fields(self):
+        fields = [map[0] + " AS " + map[1] for map in self.field_map]
+        return ', '.join(fields)
+
+    def build_mysql_insert_fields(self):
+        fields = [each[1] for each in self.field_map]
+        custom = [each for each in self.custom_mysql_fields]
+        return ', '.join(fields + custom)
+
+    def build_mysql_insert_values(self, data):
+        values = [self.mysql.db.escape(value) for value in data]
+        return ', '.join(values)
+
+    def build_mysql_insert_on_duplicate_key_update(self):
+        updates = [field + '=VALUES(' + field + ')' for field in self.update_fields]
+        return ', '.join(updates)
+
+    def build_mysql_insert(self, data):
+        fields = self.build_mysql_insert_fields()
+        values = self.build_mysql_insert_values(data)
+        on_dupe = self.build_mysql_insert_on_duplicate_key_update()
+
+        return 'INSERT INTO ' + self.mysql_table + ' (' + fields + ') VALUES(' + values + ') ON DUPLICATE KEY UPDATE ' + on_dupe
+
+    def describe_quickbooks_table(self):
+        return self.qodbc.query("sp_columns " + self.qodbc_table)
+
+    def debug_quickbooks_table(self):
+        [print(data) for data in self.describe_quickbooks_table()]
