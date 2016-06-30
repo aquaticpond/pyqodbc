@@ -35,7 +35,10 @@ print('connected')
 #InvoiceItem(quickbooks, rackspace).sync()
 #InvoiceLink(quickbooks, rackspace).sync()
 
-#CreditMemo(quickbooks, rackspace).sync()
+CreditMemo(quickbooks, rackspace).sync()
+CreditMemoItem(quickbooks,rackspace).sync()
+CreditMemoLink(quickbooks,rackspace).sync()
+
 
 #Customer(quickbooks, rackspace).sync()
 
