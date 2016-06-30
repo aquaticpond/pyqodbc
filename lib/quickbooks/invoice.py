@@ -66,3 +66,105 @@ class Invoice(Entity):
 
     def append_custom_data(self, raw):
         return [each + (self.company_file,) for each in raw]
+
+
+class InvoiceItem(Entity):
+
+    qodbc_table = 'InvoiceLine'
+    mysql_table = 'invoice_item'
+
+    field_map = (
+        ('InvoiceLineTxnLineID',        'qb_id'),
+        ('TxnID',                       'qb_invoice_id'),
+        ('InvoiceLineItemRefListID',    'qb_product_id'),
+        ('TimeCreated',                 'time_created'),
+        ('TimeModified',                'time_modified'),
+        ('InvoiceLineItemRefFullName',  'sku'),
+        ('InvoiceLineQuantity',         'quantity'),
+        ('InvoiceLineRate',             'rate'),
+        ('InvoiceLineAmount',           'amount'),
+    )
+
+    update_fields = (
+        'invoice_id',
+        'time_modified',
+        'qb_product_id',
+        'sku',
+        'quantity',
+        'rate',
+        'amount',
+    )
+
+    custom_mysql_fields = ('company_file', 'invoice_id')
+
+    def append_custom_data(self, raw):
+        return [each + self.get_custom_data_tuple_for_record(each) for each in raw]
+
+    def get_custom_data_tuple_for_record(self, record):
+        invoice_id = self.get_surrogate_key_invoice_id(record)
+        return (self.company_file, invoice_id)
+
+    def get_surrogate_key_invoice_id(self, record):
+        pos = -1
+        company_file = self.company_file
+        invoice_table = Invoice.mysql_table
+        qb_id = None
+
+        for field in self.field_map:
+            pos += 1
+            if field[0] == 'TxnID':
+                qb_id = record[pos]
+
+        qb_id = self.mysql.db.escape(qb_id)
+        query = "SELECT id AS invoice_id FROM " + invoice_table + " WHERE company_file=" + company_file + " AND qb_id=" + qb_id
+        result = self.mysql.query(query)
+
+        if len(result) > 0:
+            return result[0][0]
+
+        return None
+
+class InvoiceLink(InvoiceItem):
+
+    qodbc_table = 'InvoiceLinkedTxn'
+    mysql_table = 'invoice_link'
+
+    field_map = (
+        ('TxnID',            'qb_invoice_id'),
+        ('LinkedTxnTxnID',   'link_qb_transaction_id'),
+        ('LinkedTxnTxnType', 'link_type')
+    )
+
+    update_fields = (
+        'company_file',
+        'invoice_id',
+        'link_transaction_id'
+    )
+
+    custom_mysql_fields = ('company_file', 'invoice_id', 'link_transaction_id')
+
+    def get_custom_data_tuple_for_record(self, record):
+        invoice_id = self.get_surrogate_key_invoice_id(record)
+        link_transaction_id = self.get_surrogate_key_link_transaction_id(record)
+        return (self.company_file, invoice_id, link_transaction_id)
+
+    # @todo: implement linked transactions
+    def get_surrogate_key_link_transaction_id(self, record):
+        pos = -1
+        company_file = self.company_file
+        invoice_table = Invoice.mysql_table
+        qb_id = None
+
+        for field in self.field_map:
+            pos += 1
+            if field[0] == 'LinkedTxnTxnID':
+                qb_id = record[pos]
+
+        #qb_id = self.mysql.db.escape(qb_id)
+        #query = "SELECT id AS invoice_id FROM " + invoice_table + " WHERE company_file=" + company_file + " AND qb_id=" + qb_id
+        #result = self.mysql.query(query)
+
+        #if len(result) > 0:
+        #    return result[0][0]
+
+        return None

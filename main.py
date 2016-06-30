@@ -4,7 +4,7 @@ import os
 from configparser import ConfigParser
 from lib.database import Database
 from lib.quickbooks.entity import Entity
-from lib.quickbooks.invoice import Invoice
+from lib.quickbooks.invoice import *
 
 conf = ConfigParser()
 conf.read_file(open('config.ini'))
@@ -30,6 +30,8 @@ quickbooks = Database(pypyodbc.connect('DSN='+qodbc_dsn, autocommit=True))
 print('connected')
 
 Invoice(quickbooks, rackspace).sync()
+InvoiceItem(quickbooks, rackspace).sync()
+InvoiceLink(quickbooks, rackspace).sync()
 
 rackspace.disconnect()
 quickbooks.disconnect()
