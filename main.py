@@ -32,12 +32,12 @@ quickbooks = Database(pypyodbc.connect('DSN='+qodbc_dsn, autocommit=True))
 print('connected')
 
 #Invoice(quickbooks, rackspace).sync()
-#InvoiceItem(quickbooks, rackspace).sync()
+#InvoiceItem(quickbooks, rackspace).sync_invoices_without_items()
 #InvoiceLink(quickbooks, rackspace).sync()
 
-CreditMemo(quickbooks, rackspace).sync()
-CreditMemoItem(quickbooks,rackspace).sync()
-CreditMemoLink(quickbooks,rackspace).sync()
+#CreditMemo(quickbooks, rackspace).sync()
+#CreditMemoItem(quickbooks,rackspace).sync()
+#CreditMemoLink(quickbooks,rackspace).sync()
 
 
 #Customer(quickbooks, rackspace).sync()
