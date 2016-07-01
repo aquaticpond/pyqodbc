@@ -22,6 +22,7 @@ class Entity:
         data = self.append_custom_data(data)
         inserts = [self.build_mysql_insert(row) for row in data]
         for row in inserts:
+            print(row)
             self.mysql.insert(row)
 
     def get_last_modified(self):
