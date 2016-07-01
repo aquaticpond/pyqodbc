@@ -7,6 +7,7 @@ from lib.quickbooks.entity import Entity
 from lib.quickbooks.invoice import *
 from lib.quickbooks.credit_memo import *
 from lib.quickbooks.customer import *
+from lib.quickbooks.sales_order import *
 
 conf = ConfigParser()
 conf.read_file(open('config.ini'))
@@ -31,6 +32,8 @@ quickbooks = Database(pypyodbc.connect('DSN='+qodbc_dsn, autocommit=True))
 
 print('connected')
 
+Customer(quickbooks, rackspace).sync()
+
 Invoice(quickbooks, rackspace).sync()
 InvoiceItem(quickbooks, rackspace).sync_invoices_without_items()
 InvoiceLink(quickbooks, rackspace).sync()
@@ -39,7 +42,9 @@ CreditMemo(quickbooks, rackspace).sync()
 CreditMemoItem(quickbooks,rackspace).sync()
 CreditMemoLink(quickbooks,rackspace).sync()
 
-Customer(quickbooks, rackspace).sync()
+SalesOrder(quickbooks,rackspace).sync()
+SalesOrderItem(quickbooks,rackspace).sync()
+SalesOrderLink(quickbooks,rackspace).sync()
 
 rackspace.disconnect()
 quickbooks.disconnect()
