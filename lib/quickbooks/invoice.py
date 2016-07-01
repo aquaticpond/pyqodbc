@@ -124,6 +124,25 @@ class InvoiceItem(Entity):
 
         return None
 
+    def sync_invoices_without_items(self):
+        invoices_without_items = self.mysql.query("SELECT `invoice`.`qb_id` FROM `invoice` LEFT JOIN `invoice_item` AS `item` ON (`item`.`invoice_id` = `invoice`.`id`) WHERE `invoice`.`company_file` = 2 AND `item`.`id` IS NULL")
+        for row in invoices_without_items:
+            self.sync_items_by_invoice(row[0])
+
+    def get_item_data_from_quickbooks_by_invoice_id(self, qb_invoice_id):
+        query = "SELECT " + self.build_quickbooks_select_fields() + " FROM " + self.qodbc_table + " WHERE TxnID = '" + qb_invoice_id + "'"
+        return self.qodbc.query(query)
+
+    def sync_items_by_invoice(self, qb_invoice_id):
+        data = self.get_item_data_from_quickbooks_by_invoice_id(qb_invoice_id)
+        data = self.append_custom_data(data)
+        inserts = [self.build_mysql_insert(row) for row in data]
+        for row in inserts:
+            #print(data)
+            print(row)
+            self.mysql.insert(row)
+
+
 class InvoiceLink(InvoiceItem):
 
     qodbc_table = 'InvoiceLinkedTxn'
