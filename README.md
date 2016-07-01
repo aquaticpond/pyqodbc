@@ -1,5 +1,5 @@
 # pyqodbc
-Python wrapper for QODBC drivers
+Pull QuickBooks data using QODBC and QODBC POS drivers and send it to a MySQL database
 
 # dependencies
 * pymysql
