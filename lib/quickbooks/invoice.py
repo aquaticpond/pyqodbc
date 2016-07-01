@@ -125,7 +125,12 @@ class InvoiceItem(Entity):
         return None
 
     def sync_invoices_without_items(self):
-        invoices_without_items = self.mysql.query("SELECT `invoice`.`qb_id` FROM `invoice` LEFT JOIN `invoice_item` AS `item` ON (`item`.`invoice_id` = `invoice`.`id`) WHERE `invoice`.`company_file` = 2 AND `item`.`id` IS NULL")
+        query = "SELECT `invoice`.`qb_id` FROM `invoice` " \
+                "LEFT JOIN `invoice_item` AS `item` ON (`item`.`invoice_id` = `invoice`.`id`) " \
+                "WHERE `invoice`.`company_file` = 2 AND `invoice`.`qb_id` NOT IN ('1E3E3A-1379943309','1E3E2C-1379943042','1E3E22-1379942816','1DAFFB-1378826591','1DB003-1378826757','1E3E0F-1379942606') " \
+                "AND `item`.`id` IS NULL"
+
+        invoices_without_items = self.mysql.query(query)
         for row in invoices_without_items:
             self.sync_items_by_invoice(row[0])
 
