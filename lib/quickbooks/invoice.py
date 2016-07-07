@@ -144,9 +144,20 @@ class InvoiceItem(Entity):
         data = self.append_custom_data(data)
         inserts = [self.build_mysql_insert(row) for row in data]
         for row in inserts:
-            #print(data)
+            # print(data)
             print(row)
-            self.mysql.insert(row)
+            try:
+                self.mysql.insert(row)
+            except:
+                print("error handled")
+                print(data)
+                self.debug(data)
+
+
+    def debug(self, wat):
+        file = open('log.txt', 'a')
+        file.write(str(wat) + "\n")
+        file.close()
 
 
 class InvoiceLink(InvoiceItem):
