@@ -1,5 +1,6 @@
 config.ini
 qa.py
+log.txt
 
 # IDE
 .idea
