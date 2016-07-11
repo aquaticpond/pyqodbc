@@ -141,13 +141,17 @@ class CreditMemoLink(CreditMemoItem):
     field_map = (
         ('TxnID',            'qb_creditmemo_id'),
         ('LinkedTxnTxnID',   'link_qb_transaction_id'),
-        ('LinkedTxnTxnType', 'link_type')
+        ('LinkedTxnTxnType', 'link_type'),
+        ('TimeCreated',      'time_created'),
+        ('TimeModified',     'time_modified')
     )
 
     update_fields = (
         'company_file',
         'creditmemo_id',
-        'link_transaction_id'
+        'link_transaction_id',
+        'time_created',
+        'time_modified'
     )
 
 

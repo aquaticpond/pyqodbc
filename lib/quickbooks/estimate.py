@@ -144,13 +144,17 @@ class EstimateLink(EstimateItem):
     field_map = (
         ('TxnID',            'qb_estimate_id'),
         ('LinkedTxnTxnID',   'link_qb_transaction_id'),
-        ('LinkedTxnTxnType', 'link_type')
+        ('LinkedTxnTxnType', 'link_type'),
+        ('TimeCreated',      'time_created'),
+        ('TimeModified',     'time_modified')
     )
 
     update_fields = (
         'company_file',
         'estimate_id',
-        'link_transaction_id'
+        'link_transaction_id',
+        'time_created',
+        'time_modified'
     )
 
     custom_mysql_fields = ('company_file', 'estimate_id', 'link_transaction_id')
