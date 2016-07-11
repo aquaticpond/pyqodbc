@@ -23,8 +23,8 @@ qodbc_dsn = conf.get('qodbc', 'dsn')
 # set defaults
 Entity.company_file = conf.get('company', 'file_number')
 
-if(conf.get('company', 'refresh_from')):
-    Entity.last_entry_datetime = conf.get('company', 'refresh_from')
+#if(conf.get('company', 'refresh_from')):
+#    Entity.last_entry_datetime = conf.get('company', 'refresh_from')
 
 
 rackspace = Database(pymysql.connect(host=mysql_host, port=mysql_port, user=mysql_user, passwd=mysql_password, db=mysql_db))
@@ -32,19 +32,19 @@ quickbooks = Database(pypyodbc.connect('DSN='+qodbc_dsn, autocommit=True))
 
 print('connected')
 
-Customer(quickbooks, rackspace).sync()
+#Customer(quickbooks, rackspace).sync()
 
 Invoice(quickbooks, rackspace).sync()
-InvoiceItem(quickbooks, rackspace).sync_invoices_without_items()
+InvoiceItem(quickbooks, rackspace).sync()
 InvoiceLink(quickbooks, rackspace).sync()
 
-CreditMemo(quickbooks, rackspace).sync()
-CreditMemoItem(quickbooks,rackspace).sync()
-CreditMemoLink(quickbooks,rackspace).sync()
+#CreditMemo(quickbooks, rackspace).sync()
+#CreditMemoItem(quickbooks,rackspace).sync()
+#CreditMemoLink(quickbooks,rackspace).sync()
 
-SalesOrder(quickbooks,rackspace).sync()
-SalesOrderItem(quickbooks,rackspace).sync()
-SalesOrderLink(quickbooks,rackspace).sync()
+#SalesOrder(quickbooks,rackspace).sync()
+#SalesOrderItem(quickbooks,rackspace).sync()
+#SalesOrderLink(quickbooks,rackspace).sync()
 
 rackspace.disconnect()
 quickbooks.disconnect()
