@@ -51,7 +51,7 @@ class SalesReceipt(Entity):
 
 class SalesReceiptItem(Entity):
 
-    qodbc_table = 'SalesReceiptLine'
+    qodbc_table = 'SalesReceiptItem'
     mysql_table = 'pos_sales_receipt_item'
 
     field_map = (
