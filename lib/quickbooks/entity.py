@@ -27,7 +27,7 @@ class Entity:
 
     def get_last_modified(self):
         query = "SELECT MAX(time_modified) as max_date FROM " + self.mysql_table + " WHERE company_file=" + self.company_file
-        return self.mysql.query(query)[0][0]
+        return str(self.mysql.query(query)[0][0])
 
     def get_latest_data_from_quickbooks(self):
         query = "SELECT " + self.build_quickbooks_select_fields() + " FROM " + self.qodbc_table + " WHERE TimeModified >= {ts '" + self.last_entry_datetime +"'}"
