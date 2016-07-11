@@ -1,5 +1,6 @@
 from lib.quickbooks.entity import Entity
 
+
 class Inventory(Entity):
 
     qodbc_table = 'ItemInventory'

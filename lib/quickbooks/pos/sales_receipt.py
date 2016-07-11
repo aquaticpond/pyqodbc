@@ -1,5 +1,6 @@
 from lib.quickbooks.entity import Entity
 
+
 class SalesReceipt(Entity):
 
     qodbc_table = 'SalesReceipt'
