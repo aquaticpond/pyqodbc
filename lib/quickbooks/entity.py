@@ -32,10 +32,12 @@ class Entity:
     def write_record(self, record):
         try:
             insert = self.build_mysql_insert(record)
+            print(record)
+            print(insert)
             self.mysql.insert(insert)
         except pymysql.Error as error:
             print("exception handled")
-            self.log_error(str(error), str(record))
+            self.log_query_error(str(error), str(record), insert)
 
     def get_last_modified(self):
         query = "SELECT MAX(time_modified) as max_date FROM " + self.mysql_table + " WHERE company_file=" + self.company_file
@@ -79,11 +81,12 @@ class Entity:
     def debug_quickbooks_table(self):
         [print(data) for data in self.describe_quickbooks_table()]
 
-    def log_error(self, error, data):
+    def log_query_error(self, error, data, query):
         file = open('log.txt', 'a')
         file.write(time.strftime("%Y-%m-%d %H:%M:%S") + "\n")
         file.write(error + "\n")
         file.write(data + "\n")
+        file.write(query + "\n")
         file.write("\n")
         file.close()
 
