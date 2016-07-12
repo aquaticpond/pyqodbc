@@ -43,7 +43,7 @@ class SalesReceipt(Entity):
         'billing_postcode'
     )
 
-    custom_mysql_fields = ('company_file')
+    custom_mysql_fields = ('company_file',)
 
     def append_custom_data(self, raw):
         return [each + (self.company_file,) for each in raw]
