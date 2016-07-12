@@ -83,7 +83,7 @@ class SalesReceiptItem(Entity):
     def append_custom_data(self, raw):
         return [each + self.get_custom_data_tuple_for_record(each) for each in raw]
 
-    def get_custom_data_duple_for_record(self, record):
+    def get_custom_data_tuple_for_record(self, record):
         sales_receipt_id = self.get_surrogate_key_sales_receipt_id(record)
         product_id = self.get_surrogate_key_product_id(record)
         return (self.company_file, sales_receipt_id, product_id)
