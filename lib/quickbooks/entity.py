@@ -23,14 +23,19 @@ class Entity:
     def sync(self):
         data = self.get_latest_data_from_quickbooks()
         data = self.append_custom_data(data)
-        inserts = [self.build_mysql_insert(row) for row in data]
-        for row in inserts:
-            print(row)
-            try:
-                self.mysql.insert(row)
-            except pymysql.Error as error:
-                print("exception handled")
-                self.log_error(str(error), str(row))
+        self.write_batch(data)
+
+    def write_batch(self, data):
+        for record in data:
+            self.writeRecord(record)
+
+    def write_record(self, record):
+        try:
+            insert = self.build_mysql_insert(record)
+            self.mysql.insert(insert)
+        except pymysql.Error as error:
+            print("exception handled")
+            self.log_error(str(error), str(record))
 
     def get_last_modified(self):
         query = "SELECT MAX(time_modified) as max_date FROM " + self.mysql_table + " WHERE company_file=" + self.company_file
