@@ -5,7 +5,7 @@ from configparser import ConfigParser
 from lib.database import Database
 from lib.quickbooks.entity import Entity
 from lib.quickbooks.pos.inventory import Inventory
-from lib.quickbooks.pos.sales_receipt import SalesReceipt
+from lib.quickbooks.pos.sales_receipt import *
 
 conf = ConfigParser()
 conf.read_file(open('config.ini'))
@@ -31,6 +31,7 @@ quickbooks = Database(pypyodbc.connect('DSN='+qodbc_dsn, autocommit=True))
 print('connected')
 
 SalesReceipt(quickbooks,rackspace).sync()
+SalesReceiptItem(quickbooks,rackspace).sync()
 Inventory(quickbooks,rackspace).sync()
 
 rackspace.disconnect()
