@@ -42,3 +42,10 @@ class Inventory(Entity):
 
     def get_surrogate_key_product_id(self, record):
         return None
+
+    def get_last_modified(self):
+        return None
+
+    def get_latest_data_from_quickbooks(self):
+        query = "SELECT " + self.build_quickbooks_select_fields() + " FROM " + self.qodbc_table
+        return self.qodbc.query(query)
