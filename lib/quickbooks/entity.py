@@ -27,7 +27,7 @@ class Entity:
 
     def write_batch(self, data):
         for record in data:
-            self.writeRecord(record)
+            self.write_record(record)
 
     def write_record(self, record):
         try:
