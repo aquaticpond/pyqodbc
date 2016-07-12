@@ -1,3 +1,6 @@
+import pymysql
+
+
 class Entity:
 
     qodbc_table = None
@@ -23,7 +26,11 @@ class Entity:
         inserts = [self.build_mysql_insert(row) for row in data]
         for row in inserts:
             print(row)
-            self.mysql.insert(row)
+            try:
+                self.mysql.insert(row)
+            except pymysql.Error as error:
+                print("exception handled")
+                self.log_error(str(error), str(row))
 
     def get_last_modified(self):
         query = "SELECT MAX(time_modified) as max_date FROM " + self.mysql_table + " WHERE company_file=" + self.company_file
@@ -66,3 +73,11 @@ class Entity:
 
     def debug_quickbooks_table(self):
         [print(data) for data in self.describe_quickbooks_table()]
+
+    def log_error(self, error, data):
+        file = open('log.txt', 'a')
+        file.write(error + "\n")
+        file.write(data + "\n")
+        file.write("\n")
+        file.close()
+
