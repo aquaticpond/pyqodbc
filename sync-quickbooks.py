@@ -8,6 +8,7 @@ from lib.quickbooks.invoice import *
 from lib.quickbooks.credit_memo import *
 from lib.quickbooks.customer import *
 from lib.quickbooks.sales_order import *
+from lib.quickbooks.estimate import *
 
 conf = ConfigParser()
 conf.read_file(open('config.ini'))
@@ -46,9 +47,9 @@ print('connected')
 #SalesOrderItem(quickbooks,rackspace).sync()
 #SalesOrderLink(quickbooks,rackspace).sync()
 
-#Estimate(quickbooks,rackspace).sync()
-#EstimateItem(quickbooks,rackspace).sync()
-#EstimateLink(quickbooks,rackspace).sync()
+Estimate(quickbooks,rackspace).sync()
+EstimateItem(quickbooks,rackspace).sync()
+EstimateLink(quickbooks,rackspace).sync()
 
 rackspace.disconnect()
 quickbooks.disconnect()
