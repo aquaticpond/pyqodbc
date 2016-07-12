@@ -85,8 +85,7 @@ class SalesReceiptItem(Entity):
 
     def get_custom_data_tuple_for_record(self, record):
         sales_receipt_id = self.get_surrogate_key_sales_receipt_id(record)
-        product_id = self.get_surrogate_key_product_id(record)
-        return (self.company_file, sales_receipt_id, product_id)
+        return (self.company_file, sales_receipt_id)
 
     def get_surrogate_key_sales_receipt_id(self, record):
         pos = -1
@@ -108,5 +107,3 @@ class SalesReceiptItem(Entity):
 
         return None
 
-    def get_surrogate_key_product_id(self, record):
-        return None
