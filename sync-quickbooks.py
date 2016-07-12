@@ -27,16 +27,16 @@ Entity.company_file = conf.get('company', 'file_number')
 #    Entity.last_entry_datetime = conf.get('company', 'refresh_from')
 
 
-rackspace = Database(pymysql.connect(host=mysql_host, port=mysql_port, user=mysql_user, passwd=mysql_password, db=mysql_db))
+rackspace = Database(pymysql.connect(host=mysql_host, port=mysql_port, user=mysql_user, passwd=mysql_password, db=mysql_db, use_unicode=True, charset="utf8"))
 quickbooks = Database(pypyodbc.connect('DSN='+qodbc_dsn, autocommit=True))
 
 print('connected')
 
 #Customer(quickbooks, rackspace).sync()
 
-Invoice(quickbooks, rackspace).sync()
-InvoiceItem(quickbooks, rackspace).sync()
-InvoiceLink(quickbooks, rackspace).sync()
+#Invoice(quickbooks, rackspace).sync()
+#InvoiceItem(quickbooks, rackspace).sync()
+#InvoiceLink(quickbooks, rackspace).sync()
 
 #CreditMemo(quickbooks, rackspace).sync()
 #CreditMemoItem(quickbooks,rackspace).sync()

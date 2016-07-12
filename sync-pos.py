@@ -25,7 +25,7 @@ if(conf.get('company', 'refresh_from')):
     Entity.last_entry_datetime = conf.get('company', 'refresh_from')
 
 
-rackspace = Database(pymysql.connect(host=mysql_host, port=mysql_port, user=mysql_user, passwd=mysql_password, db=mysql_db))
+rackspace = Database(pymysql.connect(host=mysql_host, port=mysql_port, user=mysql_user, passwd=mysql_password, db=mysql_db, use_unicode=True, charset="utf8"))
 quickbooks = Database(pypyodbc.connect('DSN='+qodbc_dsn, autocommit=True))
 
 print('connected')
