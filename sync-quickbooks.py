@@ -46,6 +46,10 @@ print('connected')
 #SalesOrderItem(quickbooks,rackspace).sync()
 #SalesOrderLink(quickbooks,rackspace).sync()
 
+#Estimate(quickbooks,rackspace).sync()
+#EstimateItem(quickbooks,rackspace).sync()
+#EstimateLink(quickbooks,rackspace).sync()
+
 rackspace.disconnect()
 quickbooks.disconnect()
 
