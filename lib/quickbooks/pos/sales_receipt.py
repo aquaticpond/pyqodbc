@@ -78,7 +78,7 @@ class SalesReceiptItem(Entity):
         'quantity',
     )
 
-    custom_mysql_fields = ('company_file', 'sales_receipt_id', 'product_id')
+    custom_mysql_fields = ('company_file', 'sales_receipt_id')
 
     def append_custom_data(self, raw):
         return [each + self.get_custom_data_tuple_for_record(each) for each in raw]
