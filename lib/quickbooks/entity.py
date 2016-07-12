@@ -1,5 +1,5 @@
 import pymysql
-
+import time
 
 class Entity:
 
@@ -76,6 +76,7 @@ class Entity:
 
     def log_error(self, error, data):
         file = open('log.txt', 'a')
+        file.write(time.strftime("%Y-%m-%d %H:%M:%S") + "\n")
         file.write(error + "\n")
         file.write(data + "\n")
         file.write("\n")
