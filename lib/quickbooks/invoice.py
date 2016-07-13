@@ -128,7 +128,7 @@ class InvoiceItem(Entity):
         ignore_list = "', '".join(self.ignore_list)
         query = "SELECT `invoice`.`qb_id` FROM `invoice` " \
                 "LEFT JOIN `invoice_item` AS `item` ON (`item`.`invoice_id` = `invoice`.`id`) " \
-                "WHERE `invoice`.`company_file` = 2 AND `invoice`.`qb_id` NOT IN ('" + ignore_list + "') " \
+                "WHERE `invoice`.`company_file` = " + self.company_file + " AND `invoice`.`qb_id` NOT IN ('" + ignore_list + "') " \
                 "AND `item`.`id` IS NULL"
 
         invoices_without_items = self.mysql.query(query)
@@ -142,22 +142,7 @@ class InvoiceItem(Entity):
     def sync_items_by_invoice(self, qb_invoice_id):
         data = self.get_item_data_from_quickbooks_by_invoice_id(qb_invoice_id)
         data = self.append_custom_data(data)
-        inserts = [self.build_mysql_insert(row) for row in data]
-        for row in inserts:
-            # print(data)
-            print(row)
-            try:
-                self.mysql.insert(row)
-            except:
-                print("error handled")
-                print(data)
-                self.debug(data)
-
-
-    def debug(self, wat):
-        file = open('log.txt', 'a')
-        file.write(str(wat) + "\n")
-        file.close()
+        self.write_batch(data)
 
 
 class InvoiceLink(InvoiceItem):
