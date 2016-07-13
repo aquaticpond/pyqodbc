@@ -134,6 +134,23 @@ class SalesOrderItem(Entity):
 
         return None
 
+    def sync_orders_without_items(self):
+        query = "SELECT `order`.`qb_id` FROM `order` " \
+                "LEFT JOIN `order_item` AS `item` ON (`item`.`order_id` = `order`.`id`) " \
+                "WHERE `invoice`.`company_file` = " + self.company_file + " AND `item`.`id` IS NULL"
+
+        orders_without_items = self.mysql.query(query)
+        for row in orders_without_items:
+            self.sync_items_by_order(row[0])
+
+    def get_item_data_from_quickbooks_by_order_id(self, qb_order_id):
+        query = "SELECT " + self.build_quickbooks_select_fields() + " FROM " + self.qodbc_table + " WHERE TxnID = '" + qb_order_id + "'"
+        return self.qodbc.query(query)
+
+    def sync_items_by_order(self, qb_order_id):
+        data = self.get_item_data_from_quickbooks_by_order_id(qb_order_id)
+        data = self.append_custom_data(data)
+        self.write_batch(data)
 
 
 class SalesOrderLink(SalesOrderItem):
