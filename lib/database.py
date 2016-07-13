@@ -1,3 +1,4 @@
+import pymysql
 
 class Database:
     def __init__(self, db):
@@ -9,11 +10,19 @@ class Database:
         self.db.close()
 
     def query(self, sql):
-        self.cursor.execute(sql)
-        return self.cursor.fetchall()
+        try:
+            self.cursor.execute(sql)
+            return self.cursor.fetchall()
+        except pymysql.OperationalError:
+            self.db.ping()
+            self.cursor.execute(sql)
+            return self.cursor.fetchall()
 
     def insert(self, sql):
-        self.cursor.execute(sql)
-        self.db.commit()
-
-
+        try:
+            self.cursor.execute(sql)
+            self.db.commit()
+        except pymysql.OperationalError:
+            self.db.ping()
+            self.cursor.execute(sql)
+            self.db.commit()
