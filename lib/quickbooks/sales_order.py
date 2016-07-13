@@ -135,9 +135,9 @@ class SalesOrderItem(Entity):
         return None
 
     def sync_orders_without_items(self):
-        query = "SELECT `order`.`qb_id` FROM `order` " \
-                "LEFT JOIN `order_item` AS `item` ON (`item`.`order_id` = `order`.`id`) " \
-                "WHERE `invoice`.`company_file` = " + self.company_file + " AND `item`.`id` IS NULL"
+        query = "SELECT `order`.`qb_id` FROM `sales_order` AS `order` " \
+                "LEFT JOIN `sales_order_item` AS `item` ON (`item`.`order_id` = `order`.`id`) " \
+                "WHERE `order`.`company_file` = " + self.company_file + " AND `item`.`id` IS NULL"
 
         orders_without_items = self.mysql.query(query)
         for row in orders_without_items:
