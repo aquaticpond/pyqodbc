@@ -40,7 +40,7 @@ class Entity:
             self.log_query_error(str(error), str(record), insert)
 
     def get_last_modified(self):
-        query = "SELECT MAX(time_modified) as max_date FROM " + self.mysql_table + " WHERE company_file=" + self.company_file
+        query = "SELECT MAX(time_modified) as max_date FROM " + self.mysql_table + " WHERE company_file=" + self.company_file + " AND time_created <= NOW() + INTERVAL 4 HOUR"
         result = self.mysql.query(query)
         if result[0] and result[0][0]:
             return str(result[0][0])
