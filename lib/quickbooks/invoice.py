@@ -33,6 +33,18 @@ class Invoice(Entity):
         ('IsToBeEmailed',        'is_to_be_emailed'),
         ('IsTaxIncluded',        'is_tax_included'),
         ('ItemSalesTaxRefFullName', 'item_sales_tax'),
+        ('BillAddressAddr1',     'billing_street1'),
+        ('BillAddressAddr2',     'billing_street2'),
+        ('BillAddressCity',      'billing_city'),
+        ('BillAddressState',     'billing_state'),
+        ('BillAddressPostalCode', 'billing_postcode'),
+        ('BillAddressCountry',   'billing_country'),
+        ('ShipAddressAddr1',     'shipping_street1'),
+        ('ShipAddressAddr2',     'shipping_street2'),
+        ('ShipAddressCity',      'shipping_city'),
+        ('ShipAddressState',     'shipping_state'),
+        ('ShipAddressPostalCode', 'shipping_postcode'),
+        ('ShipAddressCountry',   'shipping_country')
     )
 
     update_fields = (
@@ -59,7 +71,19 @@ class Invoice(Entity):
         'is_to_be_printed',
         'is_to_be_emailed',
         'is_tax_included',
-        'item_sales_tax'
+        'item_sales_tax',
+        'billing_street1',
+        'billing_street2',
+        'billing_city',
+        'billing_state',
+        'billing_postcode',
+        'billing_country',
+        'shipping_street1',
+        'shipping_street2',
+        'shipping_city',
+        'shipping_state',
+        'shipping_postcode',
+        'shipping_country'
     )
 
     custom_mysql_fields = ('company_file', )
@@ -83,6 +107,7 @@ class InvoiceItem(Entity):
         ('InvoiceLineQuantity',         'quantity'),
         ('InvoiceLineRate',             'rate'),
         ('InvoiceLineAmount',           'amount'),
+        ('InvoiceLineClassRefFullName', 'class')
     )
 
     update_fields = (
@@ -93,6 +118,7 @@ class InvoiceItem(Entity):
         'quantity',
         'rate',
         'amount',
+        'class'
     )
 
     custom_mysql_fields = ('company_file', 'invoice_id')
