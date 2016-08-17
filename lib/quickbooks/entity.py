@@ -5,6 +5,8 @@ class Entity:
 
     qodbc_table = None
     mysql_table = None
+    mysql_legacy_key = None
+    qodbc_legacy_key = None
     field_map = ()
     update_fields = ()
     custom_mysql_fields = ()
@@ -24,6 +26,17 @@ class Entity:
         data = self.get_latest_data_from_quickbooks()
         data = self.append_custom_data(data)
         self.write_batch(data)
+
+    def update_legacy(self, fromDate):
+        query = "SELECT " + self.mysql_legacy_key + " FROM " + self.mysql_table + " WHERE time_modified > {ts '" + fromDate + "'} GROUP BY " + self.mysql_legacy_key
+        results = self.mysql.query(query)
+        [self.update_legacy_record(row[0]) for row in results]
+
+    def update_legacy_record(self, record_id):
+        query = "SELECT " + self.build_quickbooks_select_fields() + " FROM " + self.qodbc_table + " WHERE " + self.qodbc_legacy_key + " = '" + record_id + "'"
+        legacy = self.qodbc.query(query)
+        legacy = self.append_custom_data(legacy)
+        self.write_batch(legacy)
 
     def write_batch(self, data):
         for record in data:

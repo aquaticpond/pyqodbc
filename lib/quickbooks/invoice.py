@@ -6,6 +6,9 @@ class Invoice(Entity):
     qodbc_table = 'Invoice'
     mysql_table = 'invoice'
 
+    mysql_legacy_key = 'qb_id'
+    qodbc_legacy_key = 'TxnID'
+
     field_map = (
         ('TxnID',                'qb_id'),
         ('TimeCreated',          'time_created'),
@@ -96,6 +99,9 @@ class InvoiceItem(Entity):
 
     qodbc_table = 'InvoiceLine'
     mysql_table = 'invoice_item'
+
+    mysql_legacy_key = 'qb_invoice_id'
+    qodbc_legacy_key = 'TxnID'
 
     field_map = (
         ('InvoiceLineTxnLineID',        'qb_id'),
