@@ -45,3 +45,6 @@ class Inventory(Entity):
     def get_latest_data_from_quickbooks(self):
         query = "SELECT " + self.build_quickbooks_select_fields() + " FROM " + self.qodbc_table
         return self.qodbc.query(query)
+
+    def get_last_modified(self):
+        return '0000-00-00 00:00:00'
