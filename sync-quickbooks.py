@@ -8,6 +8,7 @@ from lib.quickbooks.invoice import *
 from lib.quickbooks.credit_memo import *
 from lib.quickbooks.customer import *
 from lib.quickbooks.sales_order import *
+from lib.quickbooks.inventory import *
 from lib.quickbooks.estimate import *
 
 conf = ConfigParser()
@@ -32,6 +33,8 @@ rackspace = Database(pymysql.connect(host=mysql_host, port=mysql_port, user=mysq
 quickbooks = Database(pypyodbc.connect('DSN='+qodbc_dsn, autocommit=True))
 
 print('connected')
+
+Inventory(quickbooks, rackspace).sync()
 
 Customer(quickbooks, rackspace).sync()
 
