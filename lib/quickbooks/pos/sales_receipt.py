@@ -6,6 +6,9 @@ class SalesReceipt(Entity):
     qodbc_table = 'SalesReceipt'
     mysql_table = 'pos_sales_receipt'
 
+    qodbc_legacy_key = 'TxnID'
+    mysql_legacy_key = 'qb_id'
+
     field_map = (
         ('TxnID',                           'qb_id'),
         ('SalesReceiptNumber',              'sales_receipt_number'),
@@ -53,6 +56,9 @@ class SalesReceiptItem(Entity):
 
     qodbc_table = 'SalesReceiptItem'
     mysql_table = 'pos_sales_receipt_item'
+
+    qodbc_legacy_key = 'TxnID'
+    mysql_legacy_key = 'qb_sales_receipt_id'
 
     field_map = (
         ('TxnID',                           'qb_sales_receipt_id'),
