@@ -187,7 +187,7 @@ class InvoiceItem(Entity):
             self.sync_items_by_invoice(row[0])
 
     def sync_all_items_by_invoice(self):
-        query = "SELECT DISTINCT `qb_id` FROM `invoice_item` WHERE `company_file` = " + self.company_file
+        query = "SELECT DISTINCT `qb_invoice_id` FROM `invoice_item` WHERE `company_file` = " + self.company_file
 
         invoices = self.mysql.query(query)
         for row in invoices:
