@@ -94,6 +94,23 @@ class Invoice(Entity):
     def append_custom_data(self, raw):
         return [each + (self.company_file,) for each in raw]
 
+    def sync_invoices_without_addresses(self):
+        query = "SELECT `invoice`.`qb_id` FROM `invoice` WHERE `billing_street1` IS NULL and `company_file` = " + self.company_file
+
+        invoices_without_addresses = self.mysql.query(query)
+        for row in invoices_without_addresses:
+            self.sync_items_by_invoice(row[0])
+
+    def get_invoice_data_from_quickbooks_by_invoice_id(self, qb_invoice_id):
+        query = "SELECT " + self.build_quickbooks_select_fields() + " FROM " + self.qodbc_table + " WHERE TxnID = '" + qb_invoice_id + "'"
+        return self.qodbc.query(query)
+
+
+    def sync_items_by_invoice(self, qb_invoice_id):
+        data = self.get_invoice_data_from_quickbooks_by_invoice_id(qb_invoice_id)
+        data = self.append_custom_data(data)
+        self.write_batch(data)
+
 
 class InvoiceItem(Entity):
 
@@ -167,6 +184,13 @@ class InvoiceItem(Entity):
 
         invoices_without_items = self.mysql.query(query)
         for row in invoices_without_items:
+            self.sync_items_by_invoice(row[0])
+
+    def sync_all_items_by_invoice(self):
+        query = "SELECT DISTINCT `qb_id` FROM `invoice_item` WHERE `company_file` = " + self.company_file
+
+        invoices = self.mysql.query(query)
+        for row in invoices:
             self.sync_items_by_invoice(row[0])
 
     def get_item_data_from_quickbooks_by_invoice_id(self, qb_invoice_id):
