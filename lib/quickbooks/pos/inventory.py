@@ -9,6 +9,7 @@ class Inventory(Entity):
     field_map = (
         ('ListID', 'qb_id'),
         ('ALU', 'sku'),
+        ('Desc2', 'description'),
         ('QuantityOnCustomerOrder', 'on_customer_order'),
         ('QuantityOnHand', 'on_hand'),
         ('QuantityOnOrder', 'on_order'),
@@ -28,7 +29,8 @@ class Inventory(Entity):
         'reorder_point',
         'is_unorderable',
         'is_below_reorder',
-        'time_modified'
+        'time_modified',
+        'description'
     )
 
     custom_mysql_fields = ('company_file', 'product_id')
