@@ -60,7 +60,7 @@ class SalesReceiptItem(Entity):
         ('TimeModified',                    'time_modified'),
         ('SalesReceiptItemListID',          'qb_id'),
         ('SalesReceiptItemALU',             'sku'),
-        ('SalesReceiptItemDesc1',           'description'),
+        ('SalesReceiptItemDesc2',           'description'),
         ('SalesReceiptItemDiscount',        'discount'),
         ('SalesReceiptItemDiscountPercent', 'discount_percent'),
         ('SalesReceiptItemTaxAmount',       'tax'),
