@@ -60,6 +60,7 @@ class SalesReceiptItem(Entity):
         ('TimeModified',                    'time_modified'),
         ('SalesReceiptItemListID',          'qb_id'),
         ('SalesReceiptItemALU',             'sku'),
+        ('SalesReceiptItemDesc1',           'description'),
         ('SalesReceiptItemDiscount',        'discount'),
         ('SalesReceiptItemDiscountPercent', 'discount_percent'),
         ('SalesReceiptItemTaxAmount',       'tax'),
@@ -76,6 +77,7 @@ class SalesReceiptItem(Entity):
         'tax_code',
         'price',
         'quantity',
+        'description'
     )
 
     custom_mysql_fields = ('company_file', 'sales_receipt_id')
