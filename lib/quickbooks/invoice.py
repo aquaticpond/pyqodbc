@@ -122,7 +122,7 @@ class InvoiceItem(Entity):
         'time_modified',
         'qb_product_id',
         'sku',
-        'name',
+        'description',
         'quantity',
         'rate',
         'amount',
