@@ -115,3 +115,18 @@ class SalesReceiptItem(Entity):
 
         return None
 
+    def sync_items_custom(self):
+        query = "SELECT DISTINCT `" + self.mysql_legacy_key + "` FROM `" + self.mysql_table + "` WHERE `company_file` = " + self.company_file + " AND `description` IS NULL"
+
+        invoices = self.mysql.query(query)
+        for row in invoices:
+            self.sync_by_parent(row[0])
+
+    def get_data_from_quickbooks_by_parent_id(self, qb_parent_id):
+        query = "SELECT " + self.build_quickbooks_select_fields() + " FROM " + self.qodbc_table + " WHERE " + self.qodbc_legacy_key + " = '" + qb_parent_id + "'"
+        return self.qodbc.query(query)
+
+    def sync_by_parent(self, qb_parent_id):
+        data = self.get_data_from_quickbooks_by_parent_id(qb_parent_id)
+        data = self.append_custom_data(data)
+        self.write_batch(data)
