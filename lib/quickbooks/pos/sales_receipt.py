@@ -64,7 +64,8 @@ class SalesReceiptItem(Entity):
         ('TxnID',                           'qb_sales_receipt_id'),
         ('TimeCreated',                     'time_created'),
         ('TimeModified',                    'time_modified'),
-        ('SalesReceiptItemListID',          'qb_id'),
+        ('SalesReceiptItemListID',          'qb_product_id'),
+        ('FQPrimaryKey',                    'qb_id'),
         ('SalesReceiptItemALU',             'sku'),
         ('SalesReceiptItemDesc2',           'description'),
         ('SalesReceiptItemDiscount',        'discount'),
@@ -83,7 +84,8 @@ class SalesReceiptItem(Entity):
         'tax_code',
         'price',
         'quantity',
-        'description'
+        'description',
+        'qb_product_id',
     )
 
     custom_mysql_fields = ('company_file', 'sales_receipt_id')
@@ -116,10 +118,11 @@ class SalesReceiptItem(Entity):
         return None
 
     def sync_items_custom(self):
-        query = "SELECT DISTINCT `" + self.mysql_legacy_key + "` FROM `" + self.mysql_table + "` WHERE `company_file` = " + self.company_file + " AND `description` IS NULL"
+        query = "SELECT DISTINCT `receipt`.`qb_id`, `receipt`.`subtotal` FROM `pos_sales_receipt` AS `receipt` LEFT JOIN `pos_sales_receipt_item` AS `item` ON (`receipt`.`id` = `item`.`sales_receipt_id`) WHERE `receipt`.`company_file` = " + self.company_file + "  GROUP BY `receipt`.`id` HAVING `receipt`.`subtotal` <> SUM((`item`.`quantity` * `item`.`price`)) OR COUNT(`item`.`id`) = 0"
 
         invoices = self.mysql.query(query)
         for row in invoices:
+            SalesReceipt(self.qodbc, self.mysql).sync_where("TxnID = '" + row[0] + "'")
             self.sync_by_parent(row[0])
 
     def get_data_from_quickbooks_by_parent_id(self, qb_parent_id):

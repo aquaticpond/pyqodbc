@@ -27,6 +27,11 @@ class Entity:
         data = self.append_custom_data(data)
         self.write_batch(data)
 
+    def sync_where(self, where):
+        data = self.get_data_from_quickbooks_where(where)
+        data = self.append_custom_data(data)
+        self.write_batch(data)
+
     def update_legacy(self, fromDate):
         query = "SELECT " + self.mysql_legacy_key + " FROM " + self.mysql_table + " WHERE time_modified > {ts '" + fromDate + "'} GROUP BY " + self.mysql_legacy_key
         results = self.mysql.query(query)
@@ -62,6 +67,10 @@ class Entity:
 
     def get_latest_data_from_quickbooks(self):
         query = "SELECT " + self.build_quickbooks_select_fields() + " FROM " + self.qodbc_table + " WHERE TimeModified >= {ts '" + self.last_entry_datetime +"'}"
+        return self.qodbc.query(query)
+
+    def get_data_from_quickbooks_where(self, where):
+        query = "SELECT " + self.build_quickbooks_select_fields() + " FROM " + self.qodbc_table + " WHERE "+ where
         return self.qodbc.query(query)
 
     def build_quickbooks_select_fields(self):
